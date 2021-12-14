@@ -4,34 +4,43 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProEventos.API.data;
 using ProEventos.API.models;
 
 namespace ProEventos.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class EventoController : ControllerBase
-    {
-        
-        public EventoController()
-        {
-        }
+	[ApiController]
+	[Route("api/[controller]")]
+	public class EventoController : ControllerBase
+	{
+		private readonly DataContext _context;
 
-        [HttpGet]
-        public Evento Get()
-        {
-            return new Evento(){
-                EventoID = 1,
-                Tema = "Asp net"
-            };
-            
-        }
+		public EventoController(DataContext context)
+		{
+			this._context = context;
 
-       [HttpPost]
-        public string Post()
-        {
-            return "Exemplo Post";
-            
-        }
-    }
+		}
+
+		[HttpGet]
+		public IEnumerable<Evento> Get()
+		{
+			return  _context.Eventos;
+
+		}
+
+		[HttpGet("{id}")]
+		public Evento GetbyId(int id)
+		{
+			return  _context.Eventos.FirstOrDefault(evento =>evento.EventoID == id);
+
+		}
+
+
+		[HttpPost]
+		public string Post()
+		{
+			return "Exemplo Post";
+
+		}
+	}
 }
